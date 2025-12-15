@@ -523,7 +523,7 @@ const editForm = ref<Email>({
 const editIndex = ref(-1)
 const handleEdit = (row: Email, index: number) => {
     editIndex.value = (tablePagination.value.currentPage - 1) * tablePagination.value.pageSize + index
-    editForm.value = row
+    editForm.value = JSON.parse(JSON.stringify(row))
     dialogEditVisible.value = true
 }
 
