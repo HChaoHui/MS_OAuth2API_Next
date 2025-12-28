@@ -1,0 +1,77 @@
+services:
+  app:
+    build: .
+    ports:
+      - "13000:13000"
+    environment:
+      - NODE_ENV=production
+      - PORT=13000
+      - USE_REDIS=1
+      - REDIS_HOST=redis
+      - REDIS_PORT=16379
+      # Database configuration (uncomment mysql service below if needed)
+      # - DB_HOST=mysql
+      # - DB_PORT=13306
+      # - DB_USER=root
+      # - DB_PASSWORD=ms_oauth2api_root
+      # - DB_DATABASE=ms_oauth2api
+      # - DB_WAIT_FOR_CONNECTIONS=true
+      # - DB_CONNECTION_LIMIT=10
+      # - DB_QUEUE_LIMIT=0
+    depends_on:
+      redis:
+        condition: service_healthy
+      # mysql:
+      #   condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:13000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "16379:6379"
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+      
+  # Uncomment below to enable MySQL
+  # mysql:
+  #   image: mysql:8.0
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ms_oauth2api_root
+  #     MYSQL_DATABASE: ms_oauth2api
+  #   ports:
+  #     - "13306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   restart: unless-stopped
+  #   networks:
+  #     - app-network
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  # mysql_data:

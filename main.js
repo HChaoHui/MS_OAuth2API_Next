@@ -18,7 +18,7 @@ const errorHandler = require('./middlewares/error')
 app.use(errorHandler)
 
 // 静态资源
-app.use(static(path.join(__dirname, '../public')))
+app.use(static(path.join(__dirname, './public')))
 
 // 请求体解析
 app.use(koaBody({
