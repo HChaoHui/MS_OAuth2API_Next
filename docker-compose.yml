@@ -8,10 +8,10 @@ services:
       - PORT=13000
       - USE_REDIS=1
       - REDIS_HOST=redis
-      - REDIS_PORT=16379
+      - REDIS_PORT=6379
       # Database configuration (uncomment mysql service below if needed)
       # - DB_HOST=mysql
-      # - DB_PORT=13306
+      # - DB_PORT=3306
       # - DB_USER=root
       # - DB_PASSWORD=ms_oauth2api_root
       # - DB_DATABASE=ms_oauth2api
