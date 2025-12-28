@@ -30,7 +30,58 @@
     - 支持邮箱验证
     - 支持邮箱清空
     - 支持邮件查看
-- 支持Docker部署(TODO 待实现)
+- 支持Docker部署
+
+### Docker 部署
+
+#### 快速开始
+
+1. **构建并启动**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+2. **查看日志**
+   ```bash
+   docker-compose logs -f app
+   ```
+
+3. **停止服务**
+   ```bash
+   docker-compose down
+   ```
+
+4. **重启服务**
+   ```bash
+   docker-compose restart
+   ```
+
+#### 端口映射
+
+| 服务 | 容器内部端口 | 外部映射端口 |
+|------|-------------|-------------|
+| App  | 13000       | 13000       |
+| Redis| 6379        | 16379       |
+| MySQL| 3306        | 13306       |
+
+#### 启用 MySQL (可选)
+
+如需使用 MySQL，编辑 `docker-compose.yml`：
+1. 取消 `mysql` 服务的注释
+2. 取消 `app` 服务中 `DB_*` 环境变量的注释
+3. 取消 `depends_on` 中 `mysql` 的注释
+4. 取消 `volumes` 中 `mysql_data` 的注释
+
+#### 环境变量配置
+
+参考 `.env.example` 文件了解所有可用配置项。在 Docker 环境中，环境变量通过 `docker-compose.yml` 配置。
+
+#### 注意事项
+- 应用服务端口: `13000`
+- Redis 外部端口: `16379` (容器内 `6379`)
+- MySQL 外部端口: `13306` (容器内 `3306`)
+- Redis 数据会持久化到 Docker Volume
+- 首次构建需编译前端，可能需要几分钟
 
 ### 使用说明
 - Redis 配置

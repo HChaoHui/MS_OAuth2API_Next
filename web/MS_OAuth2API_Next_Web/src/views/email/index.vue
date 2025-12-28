@@ -236,9 +236,9 @@ const parseFileContent = (file: UploadRawFile) => {
                 return
             }
 
-            const matches = content.split('\n');
+            const matches = content.split('\n').map(item => item.trim()).filter(item => item !== '');
 
-            if (matches) {
+            if (matches.length > 0) {
                 emailList.value = matches
             } else {
                 ElMessage.warning('未在文件中找到邮箱地址')

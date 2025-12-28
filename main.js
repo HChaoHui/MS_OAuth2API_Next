@@ -13,12 +13,15 @@ const config = require('./config')
 const logger = require('./utils/logger')
 app.use(require('./middlewares/logger'))
 
+// 初始化数据库连接（如果配置了的话）
+require('./utils/db')
+
 // 错误处理
 const errorHandler = require('./middlewares/error')
 app.use(errorHandler)
 
 // 静态资源
-app.use(static(path.join(__dirname, '../public')))
+app.use(static(path.join(__dirname, './public')))
 
 // 请求体解析
 app.use(koaBody({

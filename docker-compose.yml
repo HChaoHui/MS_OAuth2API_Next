@@ -1,0 +1,78 @@
+services:
+  app:
+    build: .
+    ports:
+      - "13000:13000"
+    environment:
+      - NODE_ENV=production
+      - PORT=13000
+      - USE_REDIS=1
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      ## ===== MySQL Config (uncomment below lines to enable) =====
+      #- DB_HOST=mysql
+      #- DB_PORT=3306
+      #- DB_USER=root
+      #- DB_PASSWORD=ms_oauth2api_root
+      #- DB_DATABASE=ms_oauth2api
+      #- DB_WAIT_FOR_CONNECTIONS=true
+      #- DB_CONNECTION_LIMIT=10
+    depends_on:
+      - redis
+      #- mysql
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:13000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "16379:6379"
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  ## ===== MySQL Service (uncomment below to enable) =====
+  #mysql:
+  #  image: mysql:8.0
+  #  ports:
+  #    - "13306:3306"
+  #  environment:
+  #    - MYSQL_ROOT_PASSWORD=ms_oauth2api_root
+  #    - MYSQL_DATABASE=ms_oauth2api
+  #    - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+  #    - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+  #  restart: unless-stopped
+  #  networks:
+  #    - app-network
+  #  healthcheck:
+  #    test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pms_oauth2api_root"]
+  #    interval: 10s
+  #    timeout: 5s
+  #    retries: 10
+  #    start_period: 30s
+  #  volumes:
+  #    - mysql_data:/var/lib/mysql
+  #  command: --default-authentication-plugin=mysql_native_password
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  #mysql_data:

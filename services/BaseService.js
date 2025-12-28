@@ -29,6 +29,9 @@ class BaseService {
    * @returns {Promise<Array>} 查询结果
    */
   async query(sql, params = []) {
+    if (!pool) {
+      throw new Error('Database not configured. Please set DB_HOST and DB_DATABASE environment variables.');
+    }
     try {
       const [rows] = await pool.query(sql, params);
       return rows;
@@ -44,7 +47,7 @@ class BaseService {
    */
   async findAll(fields = ['*']) {
     if (!validateFieldName(fields) && fields[0] !== '*') {
-      throw new Error('Invalid field names'); 
+      throw new Error('Invalid field names');
     }
     const fieldList = fields.join(', ');
     return this.query(`SELECT ${fieldList} FROM ??`, [this.tableName]);
@@ -78,15 +81,15 @@ class BaseService {
     if (!validateFieldName(fields)) {
       throw new Error('Invalid field names');
     }
-    
+
     const values = fields.map(field => data[field]);
     const placeholders = fields.map(() => '?').join(', ');
-    
+
     const [result] = await pool.query(
       `INSERT INTO ?? (??) VALUES (${placeholders})`,
       [this.tableName, fields, ...values]
     );
-    
+
     return result.insertId;
   }
 
@@ -101,15 +104,15 @@ class BaseService {
     if (!validateFieldName(fields)) {
       throw new Error('Invalid field names');
     }
-    
+
     const setClause = fields.map(field => `${field} = ?`).join(', ');
     const values = fields.map(field => data[field]);
-    
+
     const [result] = await pool.query(
       `UPDATE ?? SET ${setClause} WHERE id = ?`,
       [this.tableName, ...values, id]
     );
-    
+
     return result.affectedRows > 0;
   }
 
@@ -139,40 +142,40 @@ class BaseService {
       offset = 0,
       orderBy = 'id ASC'
     } = options;
-    
+
     if (!validateFieldName(fields) && fields[0] !== '*') {
       throw new Error('Invalid field names');
     }
-    
+
     const conditionFields = Object.keys(conditions);
     if (!validateFieldName(conditionFields)) {
       throw new Error('Invalid condition field names');
     }
-    
+
     const fieldList = fields.join(', ');
     let whereClause = '1 = 1';
     const values = [];
-    
+
     if (conditionFields.length > 0) {
       whereClause = conditionFields.map(field => {
         values.push(conditions[field]);
         return `${field} = ?`;
       }).join(' AND ');
     }
-    
+
     // 验证 orderBy
     const orderByParts = orderBy.split(' ');
     if (orderByParts.length > 2 || (orderByParts[1] && !['ASC', 'DESC'].includes(orderByParts[1].toUpperCase()))) {
       throw new Error('Invalid orderBy parameter');
     }
-    
+
     const sql = `
       SELECT ${fieldList} FROM ?? 
       WHERE ${whereClause}
       ORDER BY ${orderBy}
       LIMIT ? OFFSET ?
     `;
-    
+
     return this.query(sql, [this.tableName, ...values, limit, offset]);
   }
 
@@ -186,22 +189,22 @@ class BaseService {
     if (conditionFields.length > 0 && !validateFieldName(conditionFields)) {
       throw new Error('Invalid condition field names');
     }
-    
+
     let whereClause = '1 = 1';
     const values = [];
-    
+
     if (conditionFields.length > 0) {
       whereClause = conditionFields.map(field => {
         values.push(conditions[field]);
         return `${field} = ?`;
       }).join(' AND ');
     }
-    
+
     const [result] = await pool.query(
       `SELECT COUNT(*) AS count FROM ?? WHERE ${whereClause}`,
       [this.tableName, ...values]
     );
-    
+
     return result[0].count;
   }
 
