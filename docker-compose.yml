@@ -9,7 +9,7 @@ services:
       - USE_REDIS=1
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      # Database configuration (uncomment mysql service below if needed)
+      # ========== MySQL Configuration (uncomment to enable) ==========
       # - DB_HOST=mysql
       # - DB_PORT=3306
       # - DB_USER=root
@@ -21,6 +21,7 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      # ========== Uncomment below to wait for MySQL ==========
       # mysql:
       #   condition: service_healthy
     restart: unless-stopped
@@ -48,25 +49,29 @@ services:
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
-      
-  # Uncomment below to enable MySQL
+
+  # ========== MySQL Service (uncomment entire block to enable) ==========
   # mysql:
   #   image: mysql:8.0
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: ms_oauth2api_root
-  #     MYSQL_DATABASE: ms_oauth2api
   #   ports:
   #     - "13306:3306"
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=ms_oauth2api_root
+  #     - MYSQL_DATABASE=ms_oauth2api
+  #     - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+  #     - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
   #   restart: unless-stopped
   #   networks:
   #     - app-network
   #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pms_oauth2api_root"]
   #     interval: 10s
   #     timeout: 5s
-  #     retries: 5
+  #     retries: 10
+  #     start_period: 30s
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   command: --default-authentication-plugin=mysql_native_password
 
 networks:
   app-network:
