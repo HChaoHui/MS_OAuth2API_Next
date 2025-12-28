@@ -9,21 +9,17 @@ services:
       - USE_REDIS=1
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      # ========== MySQL Configuration (uncomment to enable) ==========
-      # - DB_HOST=mysql
-      # - DB_PORT=3306
-      # - DB_USER=root
-      # - DB_PASSWORD=ms_oauth2api_root
-      # - DB_DATABASE=ms_oauth2api
-      # - DB_WAIT_FOR_CONNECTIONS=true
-      # - DB_CONNECTION_LIMIT=10
-      # - DB_QUEUE_LIMIT=0
+      ## ===== MySQL Config (uncomment below lines to enable) =====
+      #- DB_HOST=mysql
+      #- DB_PORT=3306
+      #- DB_USER=root
+      #- DB_PASSWORD=ms_oauth2api_root
+      #- DB_DATABASE=ms_oauth2api
+      #- DB_WAIT_FOR_CONNECTIONS=true
+      #- DB_CONNECTION_LIMIT=10
     depends_on:
-      redis:
-        condition: service_healthy
-      # ========== Uncomment below to wait for MySQL ==========
-      # mysql:
-      #   condition: service_healthy
+      - redis
+      #- mysql
     restart: unless-stopped
     networks:
       - app-network
@@ -50,28 +46,28 @@ services:
       - redis_data:/data
     command: redis-server --appendonly yes
 
-  # ========== MySQL Service (uncomment entire block to enable) ==========
-  # mysql:
-  #   image: mysql:8.0
-  #   ports:
-  #     - "13306:3306"
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=ms_oauth2api_root
-  #     - MYSQL_DATABASE=ms_oauth2api
-  #     - MYSQL_CHARACTER_SET_SERVER=utf8mb4
-  #     - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
-  #   restart: unless-stopped
-  #   networks:
-  #     - app-network
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pms_oauth2api_root"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 10
-  #     start_period: 30s
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   command: --default-authentication-plugin=mysql_native_password
+  ## ===== MySQL Service (uncomment below to enable) =====
+  #mysql:
+  #  image: mysql:8.0
+  #  ports:
+  #    - "13306:3306"
+  #  environment:
+  #    - MYSQL_ROOT_PASSWORD=ms_oauth2api_root
+  #    - MYSQL_DATABASE=ms_oauth2api
+  #    - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+  #    - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+  #  restart: unless-stopped
+  #  networks:
+  #    - app-network
+  #  healthcheck:
+  #    test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pms_oauth2api_root"]
+  #    interval: 10s
+  #    timeout: 5s
+  #    retries: 10
+  #    start_period: 30s
+  #  volumes:
+  #    - mysql_data:/var/lib/mysql
+  #  command: --default-authentication-plugin=mysql_native_password
 
 networks:
   app-network:
@@ -79,4 +75,4 @@ networks:
 
 volumes:
   redis_data:
-  # mysql_data:
+  #mysql_data:
