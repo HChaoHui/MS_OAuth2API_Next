@@ -2,6 +2,8 @@
 
 搞这个项目主要是因为之前的 `MS_OAuth2API` 代码质量有点问题，维护起来越来越麻烦。  
 所以在它的基础上做了优化，修复了一些bug，提升了代码质量和可维护性，这就是 `MS_OAuth2API_Next` 啦。
+有任何问题或建议，欢迎在项目仓库中提交 `issue`。
+或联系我: [z@unix.xin](mailto:z@unix.xin)
 
 ### 版本说明
 - `MS_OAuth2API_Next` 只用来部署在服务器上
@@ -33,6 +35,13 @@
 - 支持Docker部署(TODO 待实现)
 
 ### 使用说明
+- 部署流程
+    - 克隆项目到服务器 ` git clone https://github.com/HChaoHui/MS_OAuth2API_Next`
+    - 进入项目目录 `cd MS_OAuth2API_Next`
+    - 安装依赖 `npm install`
+    - 配置环境变量 见`.env`
+    - 启动项目 `npm run start`
+
 - Redis 配置
     - `USE_REDIS` 为 `1` 时，开启 Redis 缓存
     - `USE_REDIS` 为 `0` 时，关闭 Redis 缓存
