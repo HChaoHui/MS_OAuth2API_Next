@@ -3,6 +3,7 @@ const bodyParser = require('koa-bodyparser')
 const { koaBody } = require('koa-body')
 const path = require('path')
 const static = require('koa-static')
+const fs = require('fs')
 
 const app = new Koa()
 

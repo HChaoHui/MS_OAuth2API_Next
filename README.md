@@ -1,9 +1,11 @@
 ## 项目介绍
 
 搞这个项目主要是因为之前的 `MS_OAuth2API` 代码质量有点问题，维护起来越来越麻烦。  
-所以在它的基础上做了优化，修复了一些bug，提升了代码质量和可维护性，这就是 `MS_OAuth2API_Next` 啦。
-有任何问题或建议，欢迎在项目仓库中提交 `issue`。
-或联系我: [z@unix.xin](mailto:z@unix.xin)
+所以在它的基础上做了优化，修复了一些bug，提升了代码质量和可维护性，这就是 `MS_OAuth2API_Next` 啦。  
+有任何问题或建议，欢迎在项目仓库中提交 `issue`。  
+或联系我: [z@unix.xin](mailto:z@unix.xin)  
+体验地址: [https://mon.unix.xin/](https://mon.unix.xin/)
+
 
 ### 版本说明
 - `MS_OAuth2API_Next` 只用来部署在服务器上
