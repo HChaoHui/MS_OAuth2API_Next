@@ -621,14 +621,13 @@ const getPosts = async (email: string, password: string, client_id: string, refr
         })
         const data = await response.json()
 
-        if (data.code == 200) {
+         if (data.code == 200) {
             postList.value = data.data
             localStorage.setItem(nowPost.value.email + boxType.value, JSON.stringify(postList.value))
             ElMessage.success('收取成功')
-            return
+        } else {
+            ElMessage.error(data.message || '收取失败')
         }
-
-        ElMessage.error(data.message || '收取失败')
 
     } catch (error) {
         ElMessage.error('收取失败')
