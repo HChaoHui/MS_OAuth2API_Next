@@ -41,6 +41,8 @@
     - 安装依赖 `npm install`
     - 配置环境变量 见`.env`
     - 启动项目 `npm run start`
+    - 配套资源文件在 `web/MS_OAuth2API_Next_Web` 目录下，如需自定义，修改后打包即可，项目会读取`web/MS_OAuth2API_Next_Web/dist`目录下的文件
+    - 修改请保留作者信息，谢谢
 
 - Redis 配置
     - `USE_REDIS` 为 `1` 时，开启 Redis 缓存
