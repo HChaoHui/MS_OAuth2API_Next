@@ -57,7 +57,7 @@
 ### 获取最新的一封邮件
 
 - **方法**: `GET/POST`
-- **URL**: `/api/mail-new`
+- **URL**: `/api/mail_new`
 - **描述**: 获取最新的一封邮件。
 - **参数说明**:
   - `refresh_token` (必填): 用于身份验证的 refresh_token。
@@ -70,7 +70,7 @@
 ### 获取全部邮件
 
 - **方法**: `GET/POST`
-- **URL**: `/api/mail-all`
+- **URL**: `/api/mail_all`
 - **描述**: 获取全部邮件。
 - **参数说明**:
   - `refresh_token` (必填): 用于身份验证的 refresh_token。
