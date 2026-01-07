@@ -97,6 +97,7 @@ const use_get_graph_emails = async (graph_api_result, top = 10000, email, socks5
 
         const response_emails = emails.map(item => {
             return {
+                id: item['id'],
                 send: item['from']['emailAddress']['address'],
                 subject: item['subject'],
                 text: item['bodyPreview'],
@@ -386,6 +387,21 @@ const use_test_proxy = async (socks5, http) => {
     };
 }
 
+const use_delete_graph_emails = (graph_api_result, id, socks5, http) => {
+    const agentOptions = autoAgent(socks5, http);
+    agentOptions.fetch(`https://graph.microsoft.com/v1.0/me/messages/${id}`, {
+        ...agentOptions.proxy,
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${graph_api_result.access_token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+
+    console.log(`Deleted email with id: ${id}`);
+    
+}
+
 
 
 module.exports = {
@@ -396,4 +412,5 @@ module.exports = {
     use_get_imap_emails,
     process_mails,
     use_test_proxy,
+    use_delete_graph_emails,
 }
